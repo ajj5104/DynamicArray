@@ -121,6 +121,7 @@ void DynamicArray::PushBack(int val)
 /// </summary>
 void DynamicArray::PopBack()
 {
+	if (this->GetQuantity() == 0) return;
 	int* new_array = new int[_size - 1];
 	int* new_mov = new_array;
 	access_ptr = start_pos;
@@ -147,6 +148,7 @@ void DynamicArray::PopBack()
 /// </param>
 void DynamicArray::Remove(int idx)
 {
+	if (this->GetQuantity() == 0) return;
 	int* new_array = new int[_size - 1];
 	int* new_mov = new_array;
 	access_ptr = start_pos;
@@ -179,6 +181,7 @@ void DynamicArray::Remove(int idx)
 /// </param>
 void DynamicArray::SwapIndices(int start_idx, int end_idx)
 {
+	if ((start_idx < 0 || start_idx >= this->GetQuantity()) || (end_idx < 0 || end_idx >= this->GetQuantity())) return;
 	int* index1 = nullptr;
 	int* index2 = nullptr;
 	int i = 0;
@@ -286,11 +289,10 @@ int& DynamicArray::operator[](int idx)
 int DynamicArray::FindElement(int val)
 {
 	int idx = 0;
-	access_ptr = start_pos;
 
 	while (idx < _size) {
-		if (*access_ptr == val) break;
-		access_ptr++, idx++;
+		if (*(start_pos + idx) == val) break;
+		idx++;
 	}
 
 	return idx;
@@ -307,12 +309,11 @@ int DynamicArray::FindElement(int val)
 /// </returns>
 bool DynamicArray::Contains(int val)
 {
-	access_ptr = start_pos;
 	int i = 0;
 
 	while (i < _size) {
-		if (*access_ptr == val) return true;
-		access_ptr++, i++;
+		if (*(start_pos + i) == val) return true;
+		i++;
 	}
 
 	return false;
@@ -380,7 +381,7 @@ void DynamicArray::Clear()
 /// </summary>
 void DynamicArray::Print()
 {
-	for (int i = 0; i < this->GetSize(); i++) printf("Element at Index %d: %d\n", i, this->FindAtIndex(i));
+	for (int i = 0; i < this->GetQuantity(); i++) printf("Element at Index %d: %d\n", i, this->FindAtIndex(i));
 }
 
 /// <summary>
