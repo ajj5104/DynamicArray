@@ -16,6 +16,7 @@ int main(void) {
 	test.MergeSort();
 	cout << '\n';
 	test.Print();
+	cout << '\n';
 
 	// testing insertion sort
 	test.Clear();
@@ -30,6 +31,22 @@ int main(void) {
 	test.InsertionSort();
 	cout << '\n';
 	test.Print();
+	cout << '\n';
+
+	// testing bubble sort
+	test.Clear();
+	cout << "Bubble Sort Test:\n";
+	test.PushBack(5);
+	test.PushBack(3);
+	test.PushBack(4);
+	test.PushBack(1);
+	test.PushBack(2);
+	test.Print();
+
+	test.BubbleSort();
+	cout << '\n';
+	test.Print();
+	cout << '\n';
 
 	test.~DynamicArray();
 

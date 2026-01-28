@@ -47,4 +47,5 @@ public:
 	// Sorting Algorithms
 	void MergeSort();
 	void InsertionSort();
+	void BubbleSort();
 };

@@ -467,3 +467,21 @@ void DynamicArray::InsertionSort()
 		i++;
 	}
 }
+
+/// <summary>
+/// Sorts through the array, comparing adjacent elements and swapping as necessary [time complexity O(n^2)]
+/// </summary>
+void DynamicArray::BubbleSort()
+{
+	int swap_count = 0;
+	do {
+		swap_count = 0;
+
+		for (int i = 1; i < this->GetQuantity(); i++) {
+			if (this->FindAtIndex(i) < this->FindAtIndex(i - 1)) {
+				this->SwapIndices(i, i - 1);
+				swap_count++;
+			}
+		}
+	} while (swap_count >= 1);
+}
