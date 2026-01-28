@@ -40,6 +40,7 @@ public:
 	// Internal Class Data Accessors
 	int GetSize();
 	int GetQuantity();
+	int* GetPointer(int idx);
 	bool IsEmpty();
 	void Clear();
 	void Print();
@@ -48,4 +49,5 @@ public:
 	void MergeSort();
 	void InsertionSort();
 	void BubbleSort();
+	void SelectionSort();
 };

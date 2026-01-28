@@ -341,6 +341,20 @@ int DynamicArray::GetQuantity()
 }
 
 /// <summary>
+/// Getter method for a specific index pointer
+/// </summary>
+/// <param name="idx">
+/// The index requested
+/// </param>
+/// <returns>
+/// A pointer to an integer
+/// </returns>
+int* DynamicArray::GetPointer(int idx)
+{
+	return (start_pos + idx);
+}
+
+/// <summary>
 /// Determines if the array is empty.
 /// </summary>
 /// <returns>
@@ -484,4 +498,22 @@ void DynamicArray::BubbleSort()
 			}
 		}
 	} while (swap_count >= 1);
+}
+
+/// <summary>
+/// At each step, finds the smallest remaining unsorted element and puts it into the proper location [time complexity O(n^2)]
+/// </summary>
+void DynamicArray::SelectionSort()
+{
+	int i = 0;
+	while (i < this->GetQuantity()) {
+		int smallest_idx = i;
+		for (int x = i; x < this->GetQuantity(); x++) {
+			if (this->FindAtIndex(x) < this->FindAtIndex(smallest_idx)) smallest_idx = x;
+		}
+
+		this->SwapIndices(i, smallest_idx);
+
+		i++, smallest_idx = 0;
+	}
 }

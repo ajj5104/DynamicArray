@@ -7,10 +7,15 @@ int main(void) {
 	DynamicArray test;
 	cout << "Merge Sort Test:\n";
 	test.PushBack(5);
+	test.PushBack(7);
 	test.PushBack(3);
+	test.PushBack(9);
 	test.PushBack(4);
+	test.PushBack(6);
 	test.PushBack(1);
+	test.PushBack(10);
 	test.PushBack(2);
+	test.PushBack(8);
 	test.Print();
 
 	test.MergeSort();
@@ -22,10 +27,15 @@ int main(void) {
 	test.Clear();
 	cout << "Insertion Sort Test:\n";
 	test.PushBack(5);
+	test.PushBack(7);
 	test.PushBack(3);
+	test.PushBack(9);
 	test.PushBack(4);
+	test.PushBack(6);
 	test.PushBack(1);
+	test.PushBack(10);
 	test.PushBack(2);
+	test.PushBack(8);
 	test.Print();
 
 	test.InsertionSort();
@@ -37,13 +47,38 @@ int main(void) {
 	test.Clear();
 	cout << "Bubble Sort Test:\n";
 	test.PushBack(5);
+	test.PushBack(7);
 	test.PushBack(3);
+	test.PushBack(9);
 	test.PushBack(4);
+	test.PushBack(6);
 	test.PushBack(1);
+	test.PushBack(10);
 	test.PushBack(2);
+	test.PushBack(8);
 	test.Print();
 
 	test.BubbleSort();
+	cout << '\n';
+	test.Print();
+	cout << '\n';
+
+	// testing selection sort
+	test.Clear();
+	cout << "Selection Sort Test:\n";
+	test.PushBack(5);
+	test.PushBack(7);
+	test.PushBack(3);
+	test.PushBack(9);
+	test.PushBack(4);
+	test.PushBack(6);
+	test.PushBack(1);
+	test.PushBack(10);
+	test.PushBack(2);
+	test.PushBack(8);
+	test.Print();
+
+	test.SelectionSort();
 	cout << '\n';
 	test.Print();
 	cout << '\n';
