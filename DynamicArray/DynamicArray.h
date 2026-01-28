@@ -50,4 +50,5 @@ public:
 	void InsertionSort();
 	void BubbleSort();
 	void SelectionSort();
+	void QuickSort();
 };

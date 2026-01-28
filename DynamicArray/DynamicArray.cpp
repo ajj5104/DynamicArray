@@ -451,7 +451,8 @@ void DynamicArray::MergeSortRange(int left, int right, DynamicArray& temp)
 }
 
 /// <summary>
-/// Wrapper that the can be called to mergesort an array [time complexity O(n log(n))]
+/// Wrapper that the can be called to mergesort an array
+/// [time complexity O(n log(n))]
 /// </summary>
 void DynamicArray::MergeSort()
 {
@@ -462,7 +463,8 @@ void DynamicArray::MergeSort()
 }
 
 /// <summary>
-/// Sorts the array using an insertion sort [time complexity O(n^2)]
+/// Sorts the array using an insertion sort
+/// [time complexity O(n^2)]
 /// </summary>
 void DynamicArray::InsertionSort()
 {
@@ -484,7 +486,8 @@ void DynamicArray::InsertionSort()
 }
 
 /// <summary>
-/// Sorts through the array, comparing adjacent elements and swapping as necessary [time complexity O(n^2)]
+/// Sorts through the array, comparing adjacent elements and swapping as necessary
+/// [time complexity O(n^2)]
 /// </summary>
 void DynamicArray::BubbleSort()
 {
@@ -503,7 +506,8 @@ void DynamicArray::BubbleSort()
 }
 
 /// <summary>
-/// At each step, finds the smallest remaining unsorted element and puts it into the proper location [time complexity O(n^2)]
+/// At each step, finds the smallest remaining unsorted element and puts it into the proper location
+/// [time complexity O(n^2)]
 /// </summary>
 void DynamicArray::SelectionSort()
 {
@@ -519,4 +523,13 @@ void DynamicArray::SelectionSort()
 
 		i++, smallest_idx = 0;
 	}
+}
+
+/// <summary>
+/// (WIP) Wrapper method for the quick sort algorithm 
+/// [time complexity O(n log(n))]
+/// [Worst case O(n^2)]
+/// </summary>
+void DynamicArray::QuickSort()
+{
 }
