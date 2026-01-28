@@ -466,6 +466,7 @@ void DynamicArray::MergeSort()
 /// </summary>
 void DynamicArray::InsertionSort()
 {
+	if (this->GetQuantity() <= 1) return;
 	int i = 1;
 
 	while (i < this->GetQuantity()) {
@@ -487,6 +488,7 @@ void DynamicArray::InsertionSort()
 /// </summary>
 void DynamicArray::BubbleSort()
 {
+	if (this->GetQuantity() <= 1) return;
 	int swap_count = 0;
 	do {
 		swap_count = 0;
@@ -505,6 +507,7 @@ void DynamicArray::BubbleSort()
 /// </summary>
 void DynamicArray::SelectionSort()
 {
+	if (this->GetQuantity() <= 1) return;
 	int i = 0;
 	while (i < this->GetQuantity()) {
 		int smallest_idx = i;
