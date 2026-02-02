@@ -16,30 +16,21 @@ private:
 	Node<T>* p_head;
 	Node<T>* p_tail;
 	Node<T>* p_current;
+	int m_size;
 
 public:
-	LinkedList() : p_head(nullptr), p_tail(nullptr), p_current(nullptr) {}
-	
-	void SetTestList() {
-		Node<T>* a(1);
-		Node<T>* b(2);
-		Node<T>* c(3);
+	LinkedList() : p_head(nullptr), p_tail(nullptr), p_current(nullptr), m_size(0) {}
 
-		p_head = &a;
-		p_current = p_head;
-		a.next = &b;
-		b.prev = &a;
-		b.next = &c;
-		c.prev = &b;
-		p_tail = &c;
-	}
+	LinkedList(const LinkedList&) = delete;
+
+	LinkedList& operator=(const LinkedList&) = delete;
 	
-	Node<T>* CreateNode(T* val) {
+	Node<T>* CreateNode(const T& val) {
 		Node<T>* np = new Node<T>(val);
 		return np;
 	}
 	
-	void AddNodeAtHead(T* val) {
+	void AddNodeAtHead(const T& val) {
 		Node<T>* newNode = CreateNode(val);
 		
 		if (p_head == nullptr) {
@@ -54,16 +45,15 @@ public:
 			p_head->next->prev = newNode;
 			p_current = newNode;
 		}
+
+		m_size++;
 	}
 	
-	void ClearList() {
-		if (this == nullptr) return;
-
+	void Clear() {
 		Node<T>* ptr_next;
 		p_current = p_head;
 		while (p_current != nullptr) {
 			ptr_next = p_current->next;
-			delete(p_current->data);
 			delete(p_current);
 			p_current = ptr_next;
 		}
@@ -71,9 +61,11 @@ public:
 		p_head = nullptr;
 		if (p_tail != nullptr) p_tail = nullptr;
 		if (p_current != nullptr) p_current = nullptr;
+
+		m_size = 0;
 	}
 	
-	int AddNodeAfterCurrent(T* val) {
+	void AddNodeAfterCurrent(const T& val) {
 		if (p_current == nullptr) return AddNodeAtHead(val);
 		else {
 			Node<T>* np = CreateNode(val);
@@ -86,18 +78,37 @@ public:
 
 			p_current->next = np;
 			np->prev = p_current;
+			np->next = nullptr;
 			p_current = np;
+			m_size++;
 		}
 	}
 	
-	int FindValue(T* val);
+	void PushBack(const T& val) {
+		Node<T>* np = CreateNode(val);
+		if (p_head == nullptr) {
+			p_head = np;
+			p_tail = np;
+		}
+		else {
+			p_tail->next = np;
+			np->prev = p_tail;
+			np->next = nullptr;
+			p_tail = np;
+		}
+
+		m_size++;
+	}
+
+	Node<T>* Head() {
+		return p_head;
+	}
+
+	int Size() const { return m_size; }
+
+	bool IsEmpty() const { return m_size == 0; }
 	
 	~LinkedList() {
-		p_current = p_head;
-		while (p_current != nullptr) {
-			Node<T>* next = p_current->next;
-			delete p_current;
-			p_current = next;
-		}
+		Clear();
 	}
 };
