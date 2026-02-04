@@ -88,6 +88,7 @@ private:
 	void QuickSortRange(int left, int right, DynamicArray& temp, uniform_int_distribution<int> dist) {
 		if (left >= right) return;
 
+		dist.param(left, right);
 		int idx = dist(gen);
 
 		// Indexing and sorting for temp
@@ -108,7 +109,7 @@ private:
 		for (int i = left; i <= right; i++) { this->ReplaceElement(i, temp[i]); }
 
 		QuickSortRange(left, pivot_idx - 1, temp, dist);
-		QuickSortRange(pivot_idx + pivot_count + 1, right, temp, dist);
+		QuickSortRange(pivot_idx + pivot_count, right, temp, dist);
 	}
 
 public:
