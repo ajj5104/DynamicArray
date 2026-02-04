@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <random>
 #include "LinkedList.h"
 using namespace std;
 
@@ -76,6 +77,38 @@ private:
 		MergeSortRange(left, mid, temp);
 		MergeSortRange(mid + 1, right, temp);
 		MergeRange(left, mid, right, temp);
+	}
+
+	/// <summary>
+	/// Does the quick sort on the array, partitioning using the temp array
+	/// </summary>
+	/// <param name="left"></param>
+	/// <param name="right"></param>
+	/// <param name="temp"></param>
+	void QuickSortRange(int left, int right, DynamicArray& temp, uniform_int_distribution<int> dist) {
+		if (left >= right) return;
+
+		int idx = dist(gen);
+
+		// Indexing and sorting for temp
+		int writeL = left, writeR = right, pivot_val = this->FindAtIndex(idx), pivot_count = 0, pivot_idx;
+		for (int i = left; i <= right; i++) {
+			if (this->FindAtIndex(i) == pivot_val) { pivot_count++; }
+		}
+
+		for (int i = left; i <= right; i++) {
+			if (i == idx) { continue; }	// skip selected index
+
+			if (this->FindAtIndex(i) < pivot_val) { temp[writeL++] = this->FindAtIndex(i); }
+			else if (this->FindAtIndex(i) > pivot_val) { temp[writeR--] = this->FindAtIndex(i); }
+		}
+		pivot_idx = writeL;
+		for (int i = 0; i < pivot_count; i++) { temp[i + pivot_idx] = pivot_val; }
+
+		for (int i = left; i <= right; i++) { this->ReplaceElement(i, temp[i]); }
+
+		QuickSortRange(left, pivot_idx - 1, temp, dist);
+		QuickSortRange(pivot_idx + pivot_count + 1, right, temp, dist);
 	}
 
 public:
@@ -464,6 +497,19 @@ public:
 		if (n <= 1) return;
 		DynamicArray<T> temp(n);
 		MergeSortRange(0, n - 1, temp);
+	}
+
+	void QuickSort() {
+		int n = this->GetQuantity();
+		if (n <= 1) return;
+		DynamicArray<T> temp(n);
+
+		// Creating Random Index
+		random_device rd;
+		mt19937 gen(rd);
+		uniform_int_distribution<int> dist(0, n - 1);
+
+		QuickSortRange(0, n - 1, temp, dist);
 	}
 	
 	/// <summary>
