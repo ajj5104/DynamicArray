@@ -6,44 +6,55 @@
 #include "LinkedList.h"
 using namespace std;
 
-const int N = 100000;
+const int N = 10000;
 
 int main(void) {
+	srand(time(0));
 	random_device rd;
 	mt19937 eng(rd());
-	uniform_real_distribution<double> uni_dist(0.0, 1.0);
-	normal_distribution<double> gaus_dist(0.5, 0.01);
+	uniform_int_distribution<int> dist(0, 1000);
 
-	LinkedList<double>* buckets = new LinkedList<double>[N];
+	chrono::duration<double> quick_duration, merge_duration;
+
+	DynamicArray<int> test_quick;
+
 	for (int i = 0; i < N; i++) {
-		double num = gaus_dist(eng);
-		if (num < 0) { num = 0.0; }
-		if (num >= 1) { num = 0.99999f; }
-		int idx = static_cast<int>(floor(N * num));
-		buckets[idx].PushBack(num);
+		int rand_num = dist(eng);
+		test_quick.PushBack(rand_num);
 	}
-	DynamicArray<double> output(N);
 
-	auto start = chrono::high_resolution_clock::now();
-	output.BucketSort(buckets);
-	auto end = chrono::high_resolution_clock::now();
+	DynamicArray<int> test_merge = test_quick;
 
-	cout << "Confirming Sorted Order: (If no message pops up, order is correct)\n";
-	for (int i = 1; i < output.GetQuantity(); i++) {
-		if (output[i] < output[i - 1]) {
-			cerr << "Incorrect Placement Found!" << endl;
-			cerr << "Larger Value (Index): " << output[i] << "\t(" << i << ")\n";
-			cerr << "Smaller Value (Index): " << output[i - 1] << "\t(" << i - 1 << ")\n";
+	// testing quick sort
+	auto quick_start = chrono::high_resolution_clock::now();
+	test_quick.QuickSort();
+	auto quick_end = chrono::high_resolution_clock::now();
+
+	// testing merge sort
+	auto merge_start = chrono::high_resolution_clock::now();
+	test_merge.MergeSort();
+	auto merge_end = chrono::high_resolution_clock::now();
+
+	// Results and Confirmation
+	for (int i = 1; i < test_quick.GetQuantity(); i++) {
+		if (test_quick[i] < test_quick[i - 1]) {
+			cerr << "QuickSort was out of order in some spot!\n";
+			break;
+		}
+	}
+	for (int i = 1; i < test_merge.GetQuantity(); i++) {
+		if (test_merge[i] < test_merge[i - 1]) {
+			cerr << "MergeSort was out of order in some spot!\n";
+			break;
 		}
 	}
 
-	delete[] buckets;
-	output.~DynamicArray();
-
-	chrono::duration<double> duration = end - start;
+	quick_duration = quick_end - quick_start;
+	merge_duration = merge_end - merge_start;
 
 	cout << "N = " << N << endl;
-	cout << "Bucket Sort Runtime: " << duration.count() << " seconds" << endl;
+	cout << "QuickSort Time: " << quick_duration.count() << " seconds\n";
+	cout << "MergeSort Time: " << merge_duration.count() << " seconds\n";
 
 	return 0;
 }

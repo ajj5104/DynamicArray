@@ -17,18 +17,10 @@ private:
 	/// <summary>
 	/// Merges the two sides of the array
 	/// </summary>
-	/// <param name="left">
-	/// The lower bound
-	/// </param>
-	/// <param name="mid">
-	/// The middle bound
-	/// </param>
-	/// <param name="right">
-	/// The upper bound
-	/// </param>
-	/// <param name="temp">
-	/// The temp buffer
-	/// </param>
+	/// <param name="left">The lower bound</param>
+	/// <param name="mid">The middle bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="temp">The temp buffer</param>
 	void MergeRange(int left, int mid, int right, DynamicArray<T>& temp) {
 		int i = left, j = mid + 1, k = left;
 
@@ -61,15 +53,9 @@ private:
 	/// <summary>
 	/// Does the merge sort on each side of the array in much quicker time by using a temp buffer
 	/// </summary>
-	/// <param name="left">
-	/// The lower bound of the array
-	/// </param>
-	/// <param name="right">
-	/// The upper bound of the array
-	/// </param>
-	/// <param name="temp">
-	/// The temp buffer
-	/// </param>
+	/// <param name="left">The lower bound of the array</param>
+	/// <param name="right">The upper bound of the array</param>
+	/// <param name="temp">The temp buffer</param>
 	void MergeSortRange(int left, int right, DynamicArray& temp) {
 		if (left >= right) return;
 		int mid = left + (right - left) / 2;
@@ -80,16 +66,15 @@ private:
 	}
 
 	/// <summary>
-	/// Does the quick sort on the array, partitioning using the temp array
+	/// Does the quick sort on the array, partitioning using the temp array for faster recusion
 	/// </summary>
-	/// <param name="left"></param>
-	/// <param name="right"></param>
-	/// <param name="temp"></param>
-	void QuickSortRange(int left, int right, DynamicArray& temp, uniform_int_distribution<int> dist) {
+	/// <param name="left">The lower bound of the array</param>
+	/// <param name="right">The upper bound of the array</param>
+	/// <param name="temp">The temp buffer</param>
+	void QuickSortRange(int left, int right, DynamicArray& temp) {
 		if (left >= right) return;
 
-		dist.param(left, right);
-		int idx = dist(gen);
+		int idx = rand() % (right - left + 1) + left;
 
 		// Indexing and sorting for temp
 		int writeL = left, writeR = right, pivot_val = this->FindAtIndex(idx), pivot_count = 0, pivot_idx;
@@ -108,8 +93,8 @@ private:
 
 		for (int i = left; i <= right; i++) { this->ReplaceElement(i, temp[i]); }
 
-		QuickSortRange(left, pivot_idx - 1, temp, dist);
-		QuickSortRange(pivot_idx + pivot_count, right, temp, dist);
+		QuickSortRange(left, pivot_idx - 1, temp);
+		QuickSortRange(pivot_idx + pivot_count, right, temp);
 	}
 
 public:
@@ -126,9 +111,7 @@ public:
 	/// Initializes the array to a user defined size with no elements inside.
 	/// Sets all pointers to the start of the array.
 	/// </summary>
-	/// <param name="size">
-	/// The size of the array to be created.
-	/// </param>
+	/// <param name="size">The size of the array to be created</param>
 	DynamicArray(int size) {
 		start_pos = new T[size], _size = size, _quantity = 0, access_ptr = start_pos;
 	}
@@ -136,9 +119,7 @@ public:
 	/// <summary>
 	/// Copy constructor for class
 	/// </summary>
-	/// <param name="other">
-	/// The array you want to copy from for construction
-	/// </param>
+	/// <param name="other">The array you want to copy from for construction</param>
 	DynamicArray(const DynamicArray<T>& other) {
 		_size = other._size;
 		_quantity = other._quantity;
@@ -152,9 +133,7 @@ public:
 	/// <summary>
 	/// Allows for dynamic arrays to be set equal to each other
 	/// </summary>
-	/// <param name="other">
-	/// The array you are copying from
-	/// </param>
+	/// <param name="other">The array you are copying from</param>
 	/// <returns>
 	/// The copied dynamic array
 	/// </returns>
@@ -209,9 +188,7 @@ public:
 	/// Adds the value from the user into the array.
 	/// Calls upon the increase size function to fix sizing issues (if needed)
 	/// </summary>
-	/// <param name="val">
-	/// The value to be added to the array.
-	/// </param>
+	/// <param name="val">The value to be added to the array</param>
 	void PushBack(const T& val) {
 		if (_quantity >= _size) IncreaseSize();
 		*(start_pos + _quantity) = val;
@@ -244,9 +221,7 @@ public:
 	/// <summary>
 	/// Allows for the removal of an element at a specific index.
 	/// </summary>
-	/// <param name="idx">
-	/// The index to be removed.
-	/// </param>
+	/// <param name="idx">The index to be removed</param>
 	void Remove(int idx) {
 		if (this->GetQuantity() == 0 || idx < 0 || idx >= _quantity) return;
 		T* new_array = new T[_quantity - 1];
@@ -273,12 +248,8 @@ public:
 	/// <summary>
 	/// Swaps the values at the two specified indices.
 	/// </summary>
-	/// <param name="start_idx">
-	/// The first element index you want to swap.
-	/// </param>
-	/// <param name="end_idx">
-	/// The second element index you want to swap.
-	/// </param>
+	/// <param name="start_idx">The first element index you want to swap</param>
+	/// <param name="end_idx">The second element index you want to swap</param>
 	void SwapIndices(int start_idx, int end_idx) {
 		if ((start_idx < 0 || start_idx >= this->GetQuantity()) || (end_idx < 0 || end_idx >= this->GetQuantity())) return;
 		T* index1 = nullptr;
@@ -303,12 +274,8 @@ public:
 	/// <summary>
 	/// Allows for insertion of a new element at a specific index.
 	/// </summary>
-	/// <param name="idx">
-	/// The index the new element will be in.
-	/// </param>
-	/// <param name="val">
-	/// The value at that new index.
-	/// </param>
+	/// <param name="idx">The index the new element will be in</param>
+	/// <param name="val">The value at that new index</param>
 	void Insert(int idx, const T& val) {
 		if (idx < 0 || idx > _quantity) return;
 
@@ -339,9 +306,7 @@ public:
 	/// <summary>
 	/// Finds and returns the value at the specified index.
 	/// </summary>
-	/// <param name="idx">
-	/// The index to get the value from.
-	/// </param>
+	/// <param name="idx">The index to get the value from</param>
 	/// <returns>
 	/// The value at that index.
 	/// </returns>
@@ -352,12 +317,8 @@ public:
 	/// <summary>
 	/// Replaces the value at a specific index.
 	/// </summary>
-	/// <param name="idx">
-	/// The index to replace.
-	/// </param>
-	/// <param name="val">
-	/// The new value.
-	/// </param>
+	/// <param name="idx">The index to replace</param>
+	/// <param name="val">The new value</param>
 	void ReplaceElement(int idx, const T& val) {
 		*(start_pos + idx) = val;
 	}
@@ -365,9 +326,7 @@ public:
 	/// <summary>
 	/// Allows for changing the value at an index using array notation.
 	/// </summary>
-	/// <param name="idx">
-	/// The index of the array to change.
-	/// </param>
+	/// <param name="idx">The index of the array to change</param>
 	/// <returns>
 	/// The pointer to the specific element of the array.
 	/// </returns>
@@ -378,9 +337,7 @@ public:
 	/// <summary>
 	/// Accessor for a constant pointer
 	/// </summary>
-	/// <param name="idx">
-	/// The index of the array
-	/// </param>
+	/// <param name="idx">The index of the array</param>
 	/// <returns>
 	/// A constant pointer
 	/// </returns>
@@ -391,9 +348,7 @@ public:
 	/// <summary>
 	/// Attempts to find the index of a specific value in the array (only first occurence).
 	/// </summary>
-	/// <param name="val">
-	/// The value to be found.
-	/// </param>
+	/// <param name="val">The value to be found</param>
 	/// <returns>
 	/// The index of that element in the vector. Returns last index if element not found.
 	/// </returns>
@@ -411,9 +366,7 @@ public:
 	/// <summary>
 	/// Tells user if element is found in array.
 	/// </summary>
-	/// <param name="val">
-	/// Value to find.
-	/// </param>
+	/// <param name="val">Value to find</param>
 	/// <returns>
 	/// True if found, false if not found.
 	/// </returns>
@@ -452,9 +405,7 @@ public:
 	/// <summary>
 	/// Getter method for a specific index pointer
 	/// </summary>
-	/// <param name="idx">
-	/// The index requested
-	/// </param>
+	/// <param name="idx">The index requested</param>
 	/// <returns>
 	/// A pointer to a value
 	/// </returns>
@@ -500,17 +451,15 @@ public:
 		MergeSortRange(0, n - 1, temp);
 	}
 
+	/// <summary>
+	/// Wrapper method for QuickSort
+	/// [time complexity O(n log(n))]
+	/// </summary>
 	void QuickSort() {
 		int n = this->GetQuantity();
 		if (n <= 1) return;
 		DynamicArray<T> temp(n);
-
-		// Creating Random Index
-		random_device rd;
-		mt19937 gen(rd);
-		uniform_int_distribution<int> dist(0, n - 1);
-
-		QuickSortRange(0, n - 1, temp, dist);
+		QuickSortRange(0, n - 1, temp);
 	}
 	
 	/// <summary>
@@ -581,9 +530,7 @@ public:
 	/// [best-case time complexity O(n)]
 	/// [worst-case time complexity O(n^2)] (occurs when all elements are in one bucket)
 	/// </summary>
-	/// <param name="buckets">
-	/// An array of linked lists (type must be double)
-	/// </param>
+	/// <param name="buckets">An array of linked lists (type must be double)</param>
 	void BucketSort(LinkedList<double>* buckets) {
 		for (int i = 0; i < this->GetSize(); i++) {
 			if (buckets[i].Size() == 0) { continue; }
