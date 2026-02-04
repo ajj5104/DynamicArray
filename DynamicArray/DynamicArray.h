@@ -453,7 +453,8 @@ public:
 
 	/// <summary>
 	/// Wrapper method for QuickSort
-	/// [time complexity O(n log(n))]
+	/// [best-case time complexity O(n log(n))]
+	/// [worst-case time complexity O(n^2)]
 	/// </summary>
 	void QuickSort() {
 		int n = this->GetQuantity();
