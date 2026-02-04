@@ -11,7 +11,7 @@ private:
 	T* start_pos;		// always points to the first index of memory
 	int _size;			// the current max size of the array
 	int _quantity;		// the number of elements in the current array
-	T* access_ptr;	// used to obtain the value at specific indicies
+	T* access_ptr;		// used to obtain the value at specific indicies
 
 // Internal Functions
 	/// <summary>
