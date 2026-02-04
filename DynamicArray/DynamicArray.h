@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "LinkedList.h"
 using namespace std;
 
 template <typename T>
@@ -525,6 +526,31 @@ public:
 			this->SwapIndices(i, smallest_idx);
 
 			i++, smallest_idx = 0;
+		}
+	}
+
+	/// <summary>
+	/// Method to complete a bucket sort on an array of linked lists.
+	/// [best-case time complexity O(n)]
+	/// [worst-case time complexity O(n^2)] (occurs when all elements are in one bucket)
+	/// </summary>
+	/// <param name="buckets">
+	/// An array of linked lists (type must be double)
+	/// </param>
+	void BucketSort(LinkedList<double>* buckets) {
+		for (int i = 0; i < this->GetSize(); i++) {
+			if (buckets[i].Size() == 0) { continue; }
+
+			DynamicArray<double> temp(buckets[i].Size());
+			Node<double>* p_temp = buckets[i].Head();
+			for (int j = 0; j < buckets[i].Size(); j++) {
+				temp.PushBack(p_temp->data);
+				p_temp = p_temp->next;
+			}
+			temp.InsertionSort();
+			for (int j = 0; j < temp.GetSize(); j++) {
+				this->PushBack(temp[j]);
+			}
 		}
 	}
 };
