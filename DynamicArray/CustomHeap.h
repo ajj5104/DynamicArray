@@ -7,7 +7,6 @@ template <typename T>
 class CustomHeap {
 private:
 	DynamicArray<T> heap;
-	int _length;
 
 	/// <summary>
 	/// Helper function to find the index of the parent node
@@ -33,15 +32,13 @@ public:
 	/// <summary>
 	/// Default constructor
 	/// </summary>
-	CustomHeap() {
-		_length = 0;
-	}
+	CustomHeap() {}
 
 	/// <summary>
 	/// Function to build the heap structure from a DynamicArray
 	/// </summary>
 	/// <param name="vals">A DynamicArray of values</param>
-	void BuildHeap(DynamicArray& vals) {
+	void BuildHeap(DynamicArray<T>& vals) {
 		if (vals.GetQuantity() <= 1) { return; }
 		int n = vals.GetQuantity();
 
@@ -55,9 +52,8 @@ public:
 	/// </summary>
 	/// <param name="val">The value to be added</param>
 	void AddKey(const T& val) {
-		_length++;
-		heap[_length - 1] = val;
-		this->HeapifyUp(_length - 1);
+		heap.PushBack(val);
+		this->HeapifyUp(heap.GetQuantity() - 1);
 	}
 
 	/// <summary>
@@ -94,8 +90,8 @@ public:
 	/// <returns>The removed value</returns>
 	T ExtractMin() {
 		T min = heap[0];
-		heap[0] = heap[_length - 1];
-		_length--;
+		heap[0] = heap[heap.GetQuantity() - 1];
+		heap.ReduceQuantity();
 		HeapifyDown(0);
 		return min;
 	}

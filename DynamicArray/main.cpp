@@ -4,6 +4,7 @@
 #include <chrono>
 #include "DynamicArray.h"
 #include "LinkedList.h"
+#include "CustomHeap.h"
 using namespace std;
 
 const int N = 10000;
@@ -14,7 +15,7 @@ int main(void) {
 	mt19937 eng(rd());
 	uniform_int_distribution<int> dist(0, 1000);
 
-	chrono::duration<double> quick_duration, merge_duration;
+	chrono::duration<double> quick_duration, merge_duration, heap_duration;
 
 	DynamicArray<int> test_quick;
 
@@ -24,6 +25,8 @@ int main(void) {
 	}
 
 	DynamicArray<int> test_merge = test_quick;
+	CustomHeap<int> test_heap;
+	DynamicArray<int> heap_array = test_quick;
 
 	// testing quick sort
 	auto quick_start = chrono::high_resolution_clock::now();
@@ -34,6 +37,12 @@ int main(void) {
 	auto merge_start = chrono::high_resolution_clock::now();
 	test_merge.MergeSort();
 	auto merge_end = chrono::high_resolution_clock::now();
+
+	// testing heap sort
+	test_heap.BuildHeap(heap_array);
+	auto heap_start = chrono::high_resolution_clock::now();
+	test_heap.HeapSort(heap_array);
+	auto heap_end = chrono::high_resolution_clock::now();
 
 	// Results and Confirmation
 	for (int i = 1; i < test_quick.GetQuantity(); i++) {
@@ -48,13 +57,21 @@ int main(void) {
 			break;
 		}
 	}
+	for (int i = 1; i < heap_array.GetQuantity(); i++) {
+		if (heap_array[i] < heap_array[i - 1]) {
+			cerr << "HeapSort was out of order in some spot!\n";
+			break;
+		}
+	}
 
 	quick_duration = quick_end - quick_start;
 	merge_duration = merge_end - merge_start;
+	heap_duration = heap_end - heap_start;
 
 	cout << "N = " << N << endl;
 	cout << "QuickSort Time: " << quick_duration.count() << " seconds\n";
 	cout << "MergeSort Time: " << merge_duration.count() << " seconds\n";
+	cout << "HeapSort Time: " << heap_duration.count() << " seconds\n";
 
 	return 0;
 }

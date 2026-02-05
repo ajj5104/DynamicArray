@@ -381,6 +381,8 @@ public:
 		return false;
 	}
 
+	void ReduceQuantity() { _quantity -= 1; }
+
 // Internal Class Data Accessors
 	/// <summary>
 	/// Returns the size of the array.
