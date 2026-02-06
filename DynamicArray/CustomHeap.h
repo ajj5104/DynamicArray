@@ -79,10 +79,11 @@ public:
 		int n = heap.GetQuantity() - 1;
 		while ((this->FindLeftChild(i) <= n && heap[i] > heap[this->FindLeftChild(i)]) ||
 			(this->FindRightChild(i) <= n && heap[i] > heap[this->FindRightChild(i)])) {
+			int left_child_idx = this->FindLeftChild(i), right_child_idx = this->FindRightChild(i);
 			int j;
 
-			if (this->FindRightChild(i) > n || heap[this->FindLeftChild(i)] < heap[this->FindRightChild(i)]) { j = this->FindLeftChild(i); }
-			else { j = this->FindRightChild(i); }
+			if (right_child_idx > n || heap[left_child_idx] < heap[right_child_idx]) { j = left_child_idx; }
+			else { j = right_child_idx; }
 			heap.SwapIndices(i, j);
 			i = j;
 		}
