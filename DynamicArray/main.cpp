@@ -73,5 +73,33 @@ int main(void) {
 	cout << "MergeSort Time: " << merge_duration.count() << " seconds\n";
 	cout << "HeapSort Time: " << heap_duration.count() << " seconds\n";
 
+	// test inversion counter
+	DynamicArray<int> test_inversion;
+	test_inversion.PushBack(1);
+	test_inversion.PushBack(5);
+	test_inversion.PushBack(4);
+	test_inversion.PushBack(8);
+	test_inversion.PushBack(10);
+	test_inversion.PushBack(2);
+	test_inversion.PushBack(6);
+	test_inversion.PushBack(9);
+	test_inversion.PushBack(12);
+	test_inversion.PushBack(11);
+	test_inversion.PushBack(3);
+	test_inversion.PushBack(7);
+
+	int inv = test_inversion.CountInversions();
+	cout << "Inversions: " << inv << endl;
+
+	// test sort-and-count (should have 22 inversions)
+	int sort_inv = test_inversion.SortAndCount();
+	for (int i = 1; i < test_inversion.GetQuantity(); i++) {
+		if (test_inversion[i] < test_inversion[i - 1]) {
+			cerr << "Sort-and-Count was out of order in some spot!\n";
+			break;
+		}
+	}
+	cout << "Inversions: " << sort_inv << endl;
+
 	return 0;
 }

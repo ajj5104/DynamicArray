@@ -97,6 +97,64 @@ private:
 		QuickSortRange(pivot_idx + pivot_count, right, temp);
 	}
 
+	/// <summary>
+	/// Does the sort-and-count on the array in quicker time using temp array
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="temp">The temp buffer</param>
+	int SortAndCountRange(int left, int right, DynamicArray& temp) {
+		if (left >= right) { return 0; }
+		
+		int inversion_a = 0, inversion_b = 0, inversion_m = 0;
+		int mid = left + (right - left) / 2;
+		inversion_a += SortAndCountRange(left, mid, temp);
+		inversion_b += SortAndCountRange(mid + 1, right, temp);
+		inversion_m += MergeAndCountRange(left, mid, right, temp);
+
+		return inversion_a + inversion_b + inversion_m;
+	}
+
+	/// <summary>
+	/// Does the merge-and-count on the array in quicker time using temp array
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="mid">The middle bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="temp">The temp buffer</param>
+	/// <returns>A count of inversions</returns>
+	int MergeAndCountRange(int left, int mid, int right, DynamicArray& temp) {
+		int i = left, j = mid + 1, k = left, inversion_count = 0;
+
+		while (i <= mid && j <= right) {
+			if (this->FindAtIndex(i) <= this->FindAtIndex(j)) {
+				temp[k] = this->FindAtIndex(i);
+				i++;
+			}
+			else {
+				temp[k] = this->FindAtIndex(j);
+				j++;
+				inversion_count++;
+			}
+			k++;
+		}
+
+		while (i <= mid) {
+			temp[k] = this->FindAtIndex(i);
+			i++, k++;
+		}
+		while (j <= right) {
+			temp[k] = this->FindAtIndex(j);
+			j++, k++, inversion_count++;
+		}
+
+		for (int l = left; l <= right; l++) {
+			this->ReplaceElement(l, temp[l]);
+		}
+
+		return inversion_count;
+	}
+
 public:
 // Basic Class Overhead
 	/// <summary>
@@ -452,6 +510,22 @@ public:
 		for (int i = 0; i < this->GetQuantity(); i++) cout << "Element at Index " << i << ": " << FindAtIndex(i) << endl;
 	}
 
+	/// <summary>
+	/// Counts the number of inversions in the array
+	/// </summary>
+	/// <returns>The number of inversions</returns>
+	int CountInversions() {
+		int inversion_count = 0;
+
+		for (int i = 0; i < this->GetQuantity(); i++) {
+			for (int j = i; j < this->GetQuantity(); j++) {
+				if (this->FindAtIndex(i) > this->FindAtIndex(j)) { inversion_count++; }
+			}
+		}
+
+		return inversion_count;
+	}
+
 // Sorting Algorithms
 	/// <summary>
 	/// Wrapper that the can be called to mergesort an array
@@ -560,5 +634,17 @@ public:
 				this->PushBack(temp[j]);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Wrapper method for sort-and-count
+	/// </summary>
+	/// <returns>The number of inversions</returns>
+	int SortAndCount() {
+		if (this->GetQuantity() <= 1) { return 0; }
+		int n = this->GetQuantity();
+		DynamicArray<T> temp(n);
+		int inversion_count = SortAndCountRange(0, n - 1, temp);
+		return inversion_count;
 	}
 };
