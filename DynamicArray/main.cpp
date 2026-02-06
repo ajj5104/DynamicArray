@@ -15,7 +15,7 @@ int main(void) {
 	mt19937 eng(rd());
 	uniform_int_distribution<int> dist(0, 1000);
 
-	chrono::duration<double> quick_duration, merge_duration, heap_duration;
+	chrono::duration<double> quick_duration, merge_duration, heap_duration, sort_and_count_duration;
 
 	DynamicArray<int> test_quick;
 
@@ -27,6 +27,7 @@ int main(void) {
 	DynamicArray<int> test_merge = test_quick;
 	CustomHeap<int> test_heap(N);
 	DynamicArray<int> heap_array = test_quick;
+	DynamicArray<int> test_inversion = test_quick;
 
 	// testing quick sort
 	auto quick_start = chrono::high_resolution_clock::now();
@@ -64,35 +65,14 @@ int main(void) {
 		}
 	}
 
-	quick_duration = quick_end - quick_start;
-	merge_duration = merge_end - merge_start;
-	heap_duration = heap_end - heap_start;
-
-	cout << "N = " << N << endl;
-	cout << "QuickSort Time: " << quick_duration.count() << " seconds\n";
-	cout << "MergeSort Time: " << merge_duration.count() << " seconds\n";
-	cout << "HeapSort Time: " << heap_duration.count() << " seconds\n";
-
 	// test inversion counter
-	DynamicArray<int> test_inversion;
-	test_inversion.PushBack(1);
-	test_inversion.PushBack(5);
-	test_inversion.PushBack(4);
-	test_inversion.PushBack(8);
-	test_inversion.PushBack(10);
-	test_inversion.PushBack(2);
-	test_inversion.PushBack(6);
-	test_inversion.PushBack(9);
-	test_inversion.PushBack(12);
-	test_inversion.PushBack(11);
-	test_inversion.PushBack(3);
-	test_inversion.PushBack(7);
-
 	int inv = test_inversion.CountInversions();
 	cout << "Inversions: " << inv << endl;
 
 	// test sort-and-count (should have 22 inversions)
+	auto sort_and_count_start = chrono::high_resolution_clock::now();
 	int sort_inv = test_inversion.SortAndCount();
+	auto sort_and_count_end = chrono::high_resolution_clock::now();
 	for (int i = 1; i < test_inversion.GetQuantity(); i++) {
 		if (test_inversion[i] < test_inversion[i - 1]) {
 			cerr << "Sort-and-Count was out of order in some spot!\n";
@@ -100,6 +80,17 @@ int main(void) {
 		}
 	}
 	cout << "Inversions: " << sort_inv << endl;
+
+	quick_duration = quick_end - quick_start;
+	merge_duration = merge_end - merge_start;
+	heap_duration = heap_end - heap_start;
+	sort_and_count_duration = sort_and_count_end - sort_and_count_start;
+
+	cout << "\nN = " << N << endl;
+	cout << "QuickSort Time: " << quick_duration.count() << " seconds\n";
+	cout << "MergeSort Time: " << merge_duration.count() << " seconds\n";
+	cout << "HeapSort Time: " << heap_duration.count() << " seconds\n";
+	cout << "Sort-and-Count Time: " << sort_and_count_duration.count() << " seconds\n";
 
 	return 0;
 }

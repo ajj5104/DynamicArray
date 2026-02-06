@@ -134,7 +134,7 @@ private:
 			else {
 				temp[k] = this->FindAtIndex(j);
 				j++;
-				inversion_count++;
+				inversion_count += mid - i + 1;
 			}
 			k++;
 		}
@@ -145,7 +145,7 @@ private:
 		}
 		while (j <= right) {
 			temp[k] = this->FindAtIndex(j);
-			j++, k++, inversion_count++;
+			j++, k++;
 		}
 
 		for (int l = left; l <= right; l++) {
