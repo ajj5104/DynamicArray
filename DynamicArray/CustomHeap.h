@@ -34,6 +34,10 @@ public:
 	/// </summary>
 	CustomHeap() {}
 
+	CustomHeap(int size) {
+		heap.SetSize(size);
+	}
+
 	/// <summary>
 	/// Function to build the heap structure from a DynamicArray
 	/// </summary>

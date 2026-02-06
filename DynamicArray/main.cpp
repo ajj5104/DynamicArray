@@ -25,7 +25,7 @@ int main(void) {
 	}
 
 	DynamicArray<int> test_merge = test_quick;
-	CustomHeap<int> test_heap;
+	CustomHeap<int> test_heap(N);
 	DynamicArray<int> heap_array = test_quick;
 
 	// testing quick sort

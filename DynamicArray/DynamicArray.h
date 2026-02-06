@@ -183,6 +183,17 @@ public:
 
 		_size++;
 	}
+
+	/// <summary>
+	/// Allows for a completely new size to be declared for the array.
+	/// Note: Currently does not save elements already in the array, so only use this on an empty array.
+	/// </summary>
+	/// <param name="size">The new size of the array</param>
+	void SetSize(int size) {
+		T* new_array = new T[size];
+		delete[] start_pos;
+		_size = size, start_pos = new_array, access_ptr = start_pos;
+	}
 	
 	/// <summary>
 	/// Adds the value from the user into the array.
