@@ -155,6 +155,40 @@ private:
 		return inversion_count;
 	}
 
+	/// <summary>
+	/// Does a quicksort on one side recursively to determine the median value in quicker time with temp buffer
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="k">The median index</param>
+	/// <param name="temp">A temp buffer</param>
+	/// <returns>The median value of type T</returns>
+	T SelectRandRange(int left, int right, int k, DynamicArray& temp) {
+		if (left >= right) return 0;
+
+		int idx = rand() % (right - left + 1) + left;
+
+		int writeL = left, writeR = right, pivot_val = this->FindAtIndex(idx), pivot_count = 0, pivot_idx;
+		for (int i = left; i <= right; i++) {
+			if (this->FindAtIndex(i) == pivot_val) { pivot_count++; }
+		}
+
+		for (int i = left; i <= right; i++) {
+			if (i == idx) { continue; }	// skip selected index
+
+			if (this->FindAtIndex(i) < pivot_val) { temp[writeL++] = this->FindAtIndex(i); }
+			else if (this->FindAtIndex(i) > pivot_val) { temp[writeR--] = this->FindAtIndex(i); }
+		}
+		pivot_idx = writeL;
+		for (int i = 0; i < pivot_count; i++) { temp[i + pivot_idx] = pivot_val; }
+
+		for (int i = left; i <= right; i++) { this->ReplaceElement(i, temp[i]); }
+
+		if (k < pivot_idx - 1 - left) { return SelectRandRange(left, pivot_idx - 1, k, temp); }
+		if (k >= pivot_idx - 1 - left && k < ((pivot_idx - left) + pivot_count)) { return pivot_val; }
+		else { return SelectRandRange(pivot_idx + pivot_count, right, k, temp); }
+	}
+
 public:
 // Basic Class Overhead
 	/// <summary>
@@ -646,5 +680,21 @@ public:
 		DynamicArray<T> temp(n);
 		int inversion_count = SortAndCountRange(0, n - 1, temp);
 		return inversion_count;
+	}
+
+	/// <summary>
+	/// Wrapper method for Select-Rand
+	/// [time complexity O(n log(n))]
+	/// </summary>
+	/// <returns>The median value</returns>
+	T SelectRand() {
+		if (this->GetQuantity() <= 1) { return 0; }
+		int n = this->GetQuantity();
+		DynamicArray<T> temp(n);
+		int k;
+		if (n % 2 == 0) { k = (n - 1) / 2; }
+		else { k = (n / 2) - 1; }
+		T median = SelectRandRange(0, n - 1, k, temp);
+		return median;
 	}
 };

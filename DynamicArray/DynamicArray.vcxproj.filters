@@ -29,5 +29,8 @@
     <ClInclude Include="CustomHeap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Coordinates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

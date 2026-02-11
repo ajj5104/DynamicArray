@@ -92,5 +92,19 @@ int main(void) {
 	cout << "HeapSort Time: " << heap_duration.count() << " seconds\n";
 	cout << "Sort-and-Count Time: " << sort_and_count_duration.count() << " seconds\n";
 
+	// testing select-rand
+	DynamicArray<int> test_median;
+	test_median.PushBack(2);
+	test_median.PushBack(1);
+	test_median.PushBack(4);
+	test_median.PushBack(8);
+	test_median.PushBack(3);
+	test_median.PushBack(10);
+	test_median.PushBack(5);
+
+	int median = test_median.SelectRand();
+	cout << "Median Expected: 4\n";
+	cout << "Median Determined: " << median << endl;
+
 	return 0;
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include "DynamicArray.h"
 
-// Eventually I will fully have this set up, but I'm starting it now
-// I'm choosing to make it it's own class so it will be easier to differentiate
 template <typename T>
 class CustomHeap {
 private:
