@@ -103,6 +103,7 @@ private:
 	/// <param name="left">The lower bound</param>
 	/// <param name="right">The upper bound</param>
 	/// <param name="temp">The temp buffer</param>
+	/// <returns>A count of inversions</returns>
 	int SortAndCountRange(int left, int right, DynamicArray& temp) {
 		if (left >= right) { return 0; }
 		
@@ -156,6 +157,69 @@ private:
 	}
 
 	/// <summary>
+	/// Does the sort-and-count on the array in quicker time using temp array
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="temp">The temp buffer</param>
+	/// <returns>A count of weighted inversions</returns>
+	int SortAndCountWeightedRange(int left, int right, DynamicArray& temp) {
+		if (left >= right) { return 0; }
+
+		int inversion_a = 0, inversion_b = 0, inversion_m = 0;
+		int mid = left + (right - left) / 2;
+		inversion_a += SortAndCountWeightedRange(left, mid, temp);
+		inversion_b += SortAndCountWeightedRange(mid + 1, right, temp);
+		inversion_m += MergeAndCountWeightedRange(left, mid, right, temp);
+
+		return inversion_a + inversion_b + inversion_m;
+	}
+
+	/// <summary>
+	/// WIP - There is something wrong with my counting idea
+	/// Does the merge-and-count on the array in quicker time using temp array
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="mid">The middle bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="temp">The temp buffer</param>
+	/// <returns>A count of weighted inversions</returns>
+	int MergeAndCountWeightedRange(int left, int mid, int right, DynamicArray& temp) {
+		int i = left, j = mid + 1, k = left, weighted_inversions = 0;
+
+		while (i <= mid && j <= right) {
+			if (this->FindAtIndex(i) <= this->FindAtIndex(j)) {
+				temp[k] = this->FindAtIndex(i);
+				i++;
+			}
+			else {
+				temp[k] = this->FindAtIndex(j);
+				j++;
+				for (int x = mid - i + 1; x <= right; x++) {	// Issue must be with this loop, just can't figure it out
+					weighted_inversions += this->FindAtIndex(mid - i) + this->FindAtIndex(x);
+				}
+			}
+			k++;
+		}
+
+		while (i <= mid) {
+			temp[k] = this->FindAtIndex(i);
+			i++, k++;
+		}
+		while (j <= right) {
+			temp[k] = this->FindAtIndex(j);
+			j++, k++;
+		}
+
+		for (int l = left; l <= right; l++) {
+			this->ReplaceElement(l, temp[l]);
+		}
+
+		return weighted_inversions;
+	}
+
+	/// <summary>
+	/// WIP
 	/// Does a quicksort on one side recursively to determine the median value in quicker time with temp buffer
 	/// </summary>
 	/// <param name="left">The lower bound</param>
@@ -680,6 +744,18 @@ public:
 		DynamicArray<T> temp(n);
 		int inversion_count = SortAndCountRange(0, n - 1, temp);
 		return inversion_count;
+	}
+
+	/// <summary>
+	/// Wrapper method for sort-and-count
+	/// </summary>
+	/// <returns>The number of weighted inversions</returns>
+	int SortAndCountWeighted() {
+		if (this->GetQuantity() <= 1) { return 0; }
+		int n = this->GetQuantity();
+		DynamicArray<T> temp(n);
+		int weighted_inversions = SortAndCountWeightedRange(0, n - 1, temp);
+		return weighted_inversions;
 	}
 
 	/// <summary>
