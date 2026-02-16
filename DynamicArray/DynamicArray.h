@@ -635,8 +635,8 @@ public:
 	/// <param name="start_idx">The lower bound</param>
 	/// <param name="end_idx">The upper bound</param>
 	/// <returns>A sum of values</returns>
-	T GetSumOfRange(int start_idx, int end_idx) {
-		T sum = 0;
+	long long GetSumOfRange(int start_idx, int end_idx) {
+		long long sum = 0;
 		for (int i = start_idx; i <= end_idx; i++) { sum += this->FindAtIndex(i); }
 		return sum;
 	}
