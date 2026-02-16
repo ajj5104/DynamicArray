@@ -163,10 +163,10 @@ private:
 	/// <param name="right">The upper bound</param>
 	/// <param name="temp">The temp buffer</param>
 	/// <returns>A count of weighted inversions</returns>
-	int SortAndCountWeightedRange(int left, int right, DynamicArray& temp) {
+	long long SortAndCountWeightedRange(int left, int right, DynamicArray& temp) {
 		if (left >= right) { return 0; }
 
-		int inversion_a = 0, inversion_b = 0, inversion_m = 0;
+		long long inversion_a = 0, inversion_b = 0, inversion_m = 0;
 		int mid = left + (right - left) / 2;
 		inversion_a += SortAndCountWeightedRange(left, mid, temp);
 		inversion_b += SortAndCountWeightedRange(mid + 1, right, temp);
@@ -176,7 +176,6 @@ private:
 	}
 
 	/// <summary>
-	/// WIP - There is something wrong with my counting idea
 	/// Does the merge-and-count on the array in quicker time using temp array
 	/// </summary>
 	/// <param name="left">The lower bound</param>
@@ -184,20 +183,26 @@ private:
 	/// <param name="right">The upper bound</param>
 	/// <param name="temp">The temp buffer</param>
 	/// <returns>A count of weighted inversions</returns>
-	int MergeAndCountWeightedRange(int left, int mid, int right, DynamicArray& temp) {
-		int i = left, j = mid + 1, k = left, weighted_inversions = 0;
+	long long MergeAndCountWeightedRange(int left, int mid, int right, DynamicArray& temp) {
+		int i = left, j = mid + 1, k = left;
+		long long weighted_inversions = 0;
+
+		long long sumLeft = GetSumOfRange(i, mid);
 
 		while (i <= mid && j <= right) {
-			if (this->FindAtIndex(i) <= this->FindAtIndex(j)) {
+			if (this->FindAtIndex(i) <= this->FindAtIndex(j)) {	// if this[i] is smaller than this[j]
 				temp[k] = this->FindAtIndex(i);
+				sumLeft -= this->FindAtIndex(i);
 				i++;
 			}
-			else {
+			else {	// this[i] is bigger
 				temp[k] = this->FindAtIndex(j);
+
+				T rightVal = this->FindAtIndex(j);
+				int count = mid - i + 1;
+				weighted_inversions += (long long)count * rightVal + sumLeft;
+
 				j++;
-				for (int x = mid - i + 1; x <= right; x++) {	// Issue must be with this loop, just can't figure it out
-					weighted_inversions += this->FindAtIndex(mid - i) + this->FindAtIndex(x);
-				}
 			}
 			k++;
 		}
@@ -624,6 +629,18 @@ public:
 		return inversion_count;
 	}
 
+	/// <summary>
+	/// Returns the sum of elements in a range
+	/// </summary>
+	/// <param name="start_idx">The lower bound</param>
+	/// <param name="end_idx">The upper bound</param>
+	/// <returns>A sum of values</returns>
+	T GetSumOfRange(int start_idx, int end_idx) {
+		T sum = 0;
+		for (int i = start_idx; i <= end_idx; i++) { sum += this->FindAtIndex(i); }
+		return sum;
+	}
+
 // Sorting Algorithms
 	/// <summary>
 	/// Wrapper that the can be called to mergesort an array
@@ -750,11 +767,11 @@ public:
 	/// Wrapper method for sort-and-count
 	/// </summary>
 	/// <returns>The number of weighted inversions</returns>
-	int SortAndCountWeighted() {
+	long long SortAndCountWeighted() {
 		if (this->GetQuantity() <= 1) { return 0; }
 		int n = this->GetQuantity();
 		DynamicArray<T> temp(n);
-		int weighted_inversions = SortAndCountWeightedRange(0, n - 1, temp);
+		long long weighted_inversions = SortAndCountWeightedRange(0, n - 1, temp);
 		return weighted_inversions;
 	}
 
