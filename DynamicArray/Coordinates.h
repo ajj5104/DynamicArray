@@ -28,7 +28,7 @@ public:
 	/// </summary>
 	/// <param name="x">The x-coordinate</param>
 	/// <param name="y">The y-coordinate</param>
-	void AddCoordinate(const T& x, const T& y) {
+	void PushBack(const T& x, const T& y) {
 		if (x_coords.GetQuantity() == y_coords.GetQuantity()) {
 			x_coords.PushBack(x);
 			y_coords.PushBack(y);
@@ -39,7 +39,7 @@ public:
 	/// Adds a coordinate to the system using an array
 	/// </summary>
 	/// <param name="pair">Must be in format [x,y]</param>
-	void AddCoordinate(const T pair[]) {
+	void PushBack(const T pair[]) {
 		if (x_coords.GetQuantity() == y_coords.GetQuantity()) {
 			x_coords.PushBack(pair[0]);
 			y_coords.PushBack(pair[1]);
