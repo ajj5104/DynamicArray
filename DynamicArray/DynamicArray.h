@@ -258,6 +258,78 @@ private:
 		else { return SelectRandRange(pivot_idx + pivot_count, right, k, temp); }
 	}
 
+	/// <summary>
+	/// Does the sorting and selects the k-th smallest element in the array
+	/// </summary>
+	/// <param name="left">The lower bound</param>
+	/// <param name="right">The upper bound</param>
+	/// <param name="k">The rank inside [left..right]</param>
+	/// <returns>The median value</returns>
+	T SelectRange(int left, int right, int k) {
+		int len = right - left + 1;
+		if (len <= 5) {
+			this->InsertionSortRange(left, right);
+			return this->FindAtIndex(left + k);
+		}
+
+		int numGroups = ceil(len / 5.0);
+		DynamicArray<T> medians(numGroups);
+
+		for (int i = 0; i < numGroups; i++) {
+			int g = left + 5 * i;	// start idx
+			int ge = min(g + 4, right);	// end idx
+			InsertionSortRange(g, ge);
+
+			int mid = g + (ge - g) / 2;
+			medians.PushBack(this->FindAtIndex(mid));
+		}
+
+		int mCount = medians.GetQuantity();
+		T pivot = medians.SelectRange(0, mCount - 1, (mCount - 1) / 2);
+
+		int lt = left, i = left, gt = right;
+		while (i <= gt) {
+			if (this->FindAtIndex(i) < pivot) {
+				this->SwapIndices(i, lt);
+				i++, lt++;
+			}
+			else if (this->FindAtIndex(i) > pivot) {
+				this->SwapIndices(i, gt);
+				gt--;
+			}
+			else if (this->FindAtIndex(i) == pivot) { i++; }
+		}
+
+		int Lsize = lt - left;
+		int Esize = gt - lt + 1;
+
+		if (k < Lsize) { return SelectRange(left, lt - 1, k); }
+		else if (k < Lsize + Esize) { return pivot; }
+		else {
+			int new_k = k - (Lsize + Esize);
+			return SelectRange(gt + 1, right, new_k);
+		}
+	}
+
+	/// <summary>
+	/// Sorts the subarray using an insertion sort (why range is used)
+	/// [time complexity O(n^2)]
+	/// </summary>
+	void InsertionSortRange(int left, int right) {
+		if (this->GetQuantity() <= 1) return;
+		if (left < 0 || right >= _quantity || left >= right) return;
+		int i = left + 1;
+
+		while (i <= right) {
+			int j = i;
+			while (j > left && this->FindAtIndex(j) < this->FindAtIndex(j - 1)) {
+				this->SwapIndices(j, j - 1);
+				j--;
+			}
+			i++;
+		}
+	}
+
 public:
 // Basic Class Overhead
 	/// <summary>
@@ -424,19 +496,8 @@ public:
 	/// <param name="end_idx">The second element index you want to swap</param>
 	void SwapIndices(int start_idx, int end_idx) {
 		if ((start_idx < 0 || start_idx >= this->GetQuantity()) || (end_idx < 0 || end_idx >= this->GetQuantity())) return;
-		T* index1 = nullptr;
-		T* index2 = nullptr;
-		int i = 0;
-
-		access_ptr = start_pos;
-		while (true) {
-			if (i == start_idx) index1 = access_ptr;
-			if (i == end_idx) index2 = access_ptr;
-
-			if (index1 != nullptr && index2 != nullptr) break;
-			access_ptr++;
-			i++;
-		}
+		T* index1 = start_pos + start_idx;
+		T* index2 = start_pos + end_idx;
 
 		T temp_num = *index1;
 		*index1 = *index2;
@@ -776,6 +837,7 @@ public:
 	}
 
 	/// <summary>
+	/// WIP
 	/// Wrapper method for Select-Rand
 	/// [time complexity O(n log(n))]
 	/// </summary>
@@ -789,5 +851,17 @@ public:
 		else { k = (n / 2) - 1; }
 		T median = SelectRandRange(0, n - 1, k, temp);
 		return median;
+	}
+
+	/// <summary>
+	/// Wrapper method for Select
+	/// [time complexity O(n)]
+	/// </summary>
+	/// <returns>The median value</returns>
+	T Select() {
+		int k = (_quantity - 1) / 2;
+		if (_quantity % 2 == 0) { k = _quantity / 2; }
+		if (k < 0 || k >= _quantity) { return T{}; }
+		return SelectRange(0, _quantity - 1, k);
 	}
 };

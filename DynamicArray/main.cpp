@@ -105,5 +105,79 @@ int main(void) {
 	cout << "\nExpected Weight: 56\n";
 	cout << "Actual Weight: " << weighted_inversions << endl;
 
+	// testing Select for median
+	DynamicArray<int> median_array(10);
+	// TEST 1: All Equal Vals
+	for (int i = 0; i < 10; i++) { median_array.PushBack(1); }
+	cout << "Quantity before Select: " << median_array.GetQuantity() << endl;
+	int median = median_array.Select();
+	cout << "\nExpected Median for Test 1: 1\n";
+	cout << "Actual: " << median << endl;
+
+	// TEST 2: Already Sorted
+	median_array.Clear();
+	for (int i = 0; i < 10; i++) { median_array.PushBack(i); }
+	median = median_array.Select();
+	cout << "Expected Median for Test 2: 5\n";
+	cout << "Actual: " << median << endl;
+
+	// TEST 3: Reverse Sorted
+	median_array.Clear();
+	for (int i = 9; i >= 0; i--) { median_array.PushBack(i); }
+	median = median_array.Select();
+	cout << "Expected for Test 3: 5\n";
+	cout << "Actual: " << median << endl;
+
+	// TEST 4: Many Duplicates (median should still be stable)
+	median_array.Clear();
+	// 10 elements total: sorted would be [1,1,2,2,2,2,3,3,3,3]
+	// With your expected convention (n=10 -> median reported as 5), the value should be 2.
+	int dupVals[10] = { 2, 1, 3, 2, 3, 1, 2, 3, 2, 3 };
+	for (int i = 0; i < 10; i++) { median_array.PushBack(dupVals[i]); }
+	median = median_array.Select();
+	cout << "Expected Median for Test 4: 2\n";
+	cout << "Actual: " << median << endl;
+
+	// TEST 5: Even-Length Median Convention (make it very obvious)
+	median_array.Clear();
+	// Sorted: [0,1,2,3,4,5,6,7,8,9]
+	// Your earlier tests expect 5 for n=10 (upper median). Keep that consistent.
+	for (int i = 0; i < 10; i++) { median_array.PushBack(i); }
+	median = median_array.Select();
+	cout << "Expected Median for Test 5 (even-n convention): 5\n";
+	cout << "Actual: " << median << endl;
+
+	// TEST 6: Large Random Array (sanity + performance; verify by sorting a copy)
+	median_array.Clear();
+	const int N = 100000; // bump to 1'000'000 if you want stress testing
+	std::mt19937 rng(12345);
+	std::uniform_int_distribution<int> dist_2(-1000000, 1000000);
+
+	for (int i = 0; i < N; i++) { median_array.PushBack(dist_2(rng)); }
+
+	// Make a copy before calling Select(), since Select likely mutates the array
+	DynamicArray<int> copy_for_check = median_array;
+
+	median = median_array.Select(); // your Select() returns the median
+	cout << "Median for Test 6 (Large Random): " << median << endl;
+
+	// Verify by sorting the copy and checking the expected median element.
+	// Note: based on your convention, expect the element at index N/2 (upper median for even N).
+	copy_for_check.MergeSort();
+	int expectedMedian = copy_for_check[N / 2];
+	cout << "Expected Median for Test 6 (via sorting check): " << expectedMedian << endl;
+	cout << "Actual: " << median << endl;
+
+	// TEST 7: Repeated Calls / Mutation Check (Select may reorder; median should remain same)
+	median_array.Clear();
+	int vals7[10] = { 9, 0, 8, 1, 7, 2, 6, 3, 5, 4 };
+	for (int i = 0; i < 10; i++) { median_array.PushBack(vals7[i]); }
+
+	int median1 = median_array.Select();
+	int median2 = median_array.Select(); // if Select mutates, this still should return same median value
+	cout << "Expected Median for Test 7: 5\n";
+	cout << "Actual (first call): " << median1 << endl;
+	cout << "Actual (second call): " << median2 << endl;
+
 	return 0;
 }
