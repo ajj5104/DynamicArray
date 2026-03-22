@@ -864,4 +864,28 @@ public:
 		if (k < 0 || k >= _quantity) { return T{}; }
 		return SelectRange(0, _quantity - 1, k);
 	}
+
+	/// <summary>
+	/// Sorts an array of times by finishing time (NOTE: Only works if the array is of type Times)
+	/// </summary>
+	void SortFinishTimes() {
+		if (this->GetQuantity() <= 1) return;
+		int i = 1;
+
+		while (i < this->GetQuantity()) {
+			for (int x = 1; x <= i; x++) {
+				if (this->FindAtIndex(x).finish < this->FindAtIndex(x - 1).finish) {
+					i = x;
+					break;
+				}
+			}
+
+			int swap_idx = i;
+			while (swap_idx > 0 && this->FindAtIndex(swap_idx).finish < this->FindAtIndex(swap_idx - 1).finish) {
+				this->SwapIndices(swap_idx, swap_idx - 1);
+				swap_idx--;
+			}
+			i++;
+		}
+	}
 };

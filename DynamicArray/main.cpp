@@ -9,6 +9,12 @@ using namespace std;
 
 const int N = 10000;
 
+struct Times {
+	int start;
+	int finish;
+	int original_index;
+};
+
 int main(void) {
 	srand(time(0));
 	random_device rd;
