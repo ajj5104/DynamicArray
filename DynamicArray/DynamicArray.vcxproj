@@ -130,6 +130,7 @@
     <ClInclude Include="CustomHeap.h" />
     <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="Times.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
