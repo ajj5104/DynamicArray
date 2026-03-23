@@ -867,6 +867,7 @@ public:
 
 	/// <summary>
 	/// Sorts an array of times by finishing time (NOTE: Only works if the array is of type Times)
+	/// Algorithm type is an Insertion Sort
 	/// </summary>
 	void SortFinishTimes() {
 		if (this->GetQuantity() <= 1) return;
