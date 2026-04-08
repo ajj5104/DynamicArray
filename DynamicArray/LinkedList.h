@@ -100,6 +100,25 @@ public:
 		m_size++;
 	}
 
+	T PopFront() {
+		Node<T>* oldHead = p_head;
+		T val = oldHead->data;
+
+		p_head = p_head->next;
+
+		if (p_head != nullptr) {
+			p_head->prev = nullptr;
+		}
+		else {
+			p_tail = nullptr;
+		}
+
+		delete oldHead;
+		m_size--;
+
+		return val;
+	}
+
 	Node<T>* Head() {
 		return p_head;
 	}
